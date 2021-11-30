@@ -33,20 +33,6 @@ with:
   pylint-paths: "python tests"
 ```
 
-## Building
-
-For more information on the GitHub Actions build and release workflow,
-see the [official documentation](https://docs.github.com/en/actions/creating-actions/creating-a-javascript-action).
-
-To bundle the source for use as a GitHub Action, assuming the current
-working directory contains `package.json` run
-```shell
-npm install
-npm run build
-```
-This will create a bundled build under `dist`, which is referenced by
-the `action.yml`.
-
 ## License
 
 This project is licence under the [Apache 2.0 license](LICENSE), and

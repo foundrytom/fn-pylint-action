@@ -35,6 +35,40 @@ In addition, contributors are required to complete either the Individual
 or Corporate Contribution License Agreement. Please contact one of the
 trusted committers for more information.
 
+## Releases
+
+The action is released through CI, via the standard [GitHub Actions
+release workflow](https://docs.github.com/en/actions/creating-actions/releasing-and-maintaining-actions#setting-up-github-actions-workflows).
+This is taken care of by the workflow defined in
+[release.yml](./.github/workflows/release.yml).  This will automatically
+build and update the appropriate tags when a release is created in
+GitHub.
+
+The steps to follow are these:
+
+1. Get a PR with the required changes reviewed and merged.
+3. Update [CHANGES.md](CHANGES.md) accordingly with the new SemVer
+   version.
+4. Update [package.json](package.json) with the updated version.
+5. Get a PR with these version changes reviewed and merged.
+6. Create a release in the GitHub UI with the appropriate version,
+   coping in the relevant changes from [CHANGES.md](CHANGES.md).
+
+## Building manually
+
+If you need to build the code locally for testing or a manual release,
+the source + dependencies need to be bundled into the `dist` folder.
+Assuming the current working directory contains `package.json` run:
+
+```shell
+npm install
+npm run build
+```
+
+This will create a bundled build under `dist`, which is referenced by
+the `action.yml`.
+
+
 ### IDE configuration
 
 To aid in conforming to our coding style a [`.editorconfig`](https://editorconfig.org/)

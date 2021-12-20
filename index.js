@@ -48,7 +48,7 @@ async function run() {
         // Error 32, is a usage error
         if(pylintError.message.indexOf("exit code 32") > 0) {
             console.error(pylintError);
-            code.setFailed()
+            core.setFailed()
             return;
         }
 

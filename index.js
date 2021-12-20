@@ -24,13 +24,14 @@ async function run() {
     const pylintPaths = core.getInput('pylint-paths');
     const pylintIgnorePaths = core.getInput('pylint-ignore-paths') || "";
 
+    let exitCode = 0;
     let pylintOutput = "";  // Pylint process output.
     try {
         // Run pylint via `exec()`, which throws an exception if the
         // process exits with a non-zero exit code. Here, we assume a
         // non-zero exit code (and hence exception) means pylint has
         // detected issues in the code that we need to report.
-        await exec.exec("pylint", [
+        exitCode = await exec.exec("pylint", [
             `--disable=${pylintDisable}`,
             `--rcfile=${pylintRCFile}`,
             `--ignore-paths=${pylintIgnorePaths}`,
@@ -42,6 +43,8 @@ async function run() {
             }
         });
     } catch (pylintError) {
+        console.log(pylintError)
+        console.log(errorCode)
         try {
             reportResults(JSON.parse(pylintOutput), pylintDisable);
         } catch (reportingError) {
@@ -52,6 +55,12 @@ async function run() {
             console.error(pylintError);
             console.error(reportingError);
         }
+    }
+
+    // The exit code for pylint is a bitmask, and usage
+    // errors themselves are hidden here.
+    if (exitCode && 32) {
+        console.setFailed()
     }
 }
 

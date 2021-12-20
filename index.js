@@ -42,10 +42,6 @@ async function run() {
         }
     }).catch(pylintError => {
 
-        console.log("======error======")
-        console.log(pylintError)
-        console.log("======end-error======")
-
         try {
             reportResults(JSON.parse(pylintOutput), pylintDisable);
         } catch (reportingError) {
@@ -57,6 +53,10 @@ async function run() {
             console.error(reportingError);
         }
     });
+
+    console.log( "ERROR CODE=====")
+    console.log(errorCode)
+    console.log("====")
 
     if (exitCode && 32) {
         core.setFailed()

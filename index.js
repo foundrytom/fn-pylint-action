@@ -22,6 +22,7 @@ async function run() {
     const pylintDisable = core.getInput('pylint-disable') || "";
     const pylintRCFile = core.getInput('pylint-rcfile') || "";
     const pylintPaths = core.getInput('pylint-paths');
+    const pylintIgnorePaths = core.getInput('pylint-ignore-paths') || "";
 
     let pylintOutput = "";  // Pylint process output.
     try {
@@ -31,6 +32,7 @@ async function run() {
         // detected issues in the code that we need to report.
         await exec.exec("pylint", [
             `--disable=${pylintDisable}`,
+            `--ignore-paths=${pylintIgnorePaths}`,
             `--rcfile=${pylintRCFile}`,
             `--output-format=json`,
             ...pylintPaths.split(" ")

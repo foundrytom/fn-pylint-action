@@ -33,7 +33,7 @@ async function run() {
     await exec.exec("pylint", [
         `--disable=${pylintDisable}`,
         `--rcfile=${pylintRCFile}`,
-        `--ignore-paths="${pylintIgnorePaths}"`,
+        `--ignore-paths=${pylintIgnorePaths}`,
         `--output-format=json`,
         ...pylintPaths.split(" ")
     ], {

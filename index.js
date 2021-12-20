@@ -30,7 +30,7 @@ async function run() {
     // process exits with a non-zero exit code. Here, we assume a
     // non-zero exit code (and hence exception) means pylint has
     // detected issues in the code that we need to report.
-    await exec.exec("pylint", [
+    let exitCode = await exec.exec("pylint", [
         `--disable=${pylintDisable}`,
         `--rcfile=${pylintRCFile}`,
         `--ignore-paths=${pylintIgnorePaths}`,
@@ -57,6 +57,10 @@ async function run() {
             console.error(reportingError);
         }
     });
+
+    if (exitCode && 32) {
+        core.setFailed()
+    }
 }
 
 /**

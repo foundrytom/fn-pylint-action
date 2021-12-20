@@ -30,7 +30,7 @@ async function run() {
     // process exits with a non-zero exit code. Here, we assume a
     // non-zero exit code (and hence exception) means pylint has
     // detected issues in the code that we need to report.
-    let exitCode = await exec.exec("pylint", [
+    await exec.exec("pylint", [
         `--disable=${pylintDisable}`,
         `--rcfile=${pylintRCFile}`,
         `--ignore-paths=${pylintIgnorePaths}`,
@@ -42,25 +42,25 @@ async function run() {
         }
     }).catch(pylintError => {
 
+        // The exception thrown by `exec` doesn't include the exit
+        // code as a field, we have to parse the error message.
+
+        // Error 32, is a usage error
+        if(pylintError.message.indexOf("exit code 32") > 0) {
+            console.error(pylintError);
+            code.setFailed()
+            return;
+        }
+
+        // Any other exit code means one or more errors were
+        // found in the source so report these as we like.
         try {
             reportResults(JSON.parse(pylintOutput), pylintDisable);
         } catch (reportingError) {
-            // The exception thrown by `exec` doesn't include the exit
-            // code as a field (we'd have to parse the error message).
-            // So report the pylint process error here as well, in case
-            // that was the root cause for `reportResults` failing.
             console.error(pylintError);
             console.error(reportingError);
         }
     });
-
-    console.log( "ERROR CODE=====")
-    console.log(exitCode)
-    console.log("====")
-
-    if (exitCode && 32) {
-        core.setFailed()
-    }
 }
 
 /**

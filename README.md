@@ -24,6 +24,10 @@ Pylint configuration file location. Specifically, the value of
 Pylint checks to disable. Specifically, the value of `pylint`'s
 `--disable=` command-line option.
 
+## `pylint-ignore-paths`
+
+The paths to pass to `pylint`s `--ignore-paths` command-line option.
+
 ## Example usage
 ```yaml
 uses: TheFoundryVisionmongers/fn-pylint-action@v1

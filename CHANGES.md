@@ -1,7 +1,7 @@
 Changes
 =======
 
-vX.X.X
+v1.1.0
 ------
 
 # New features

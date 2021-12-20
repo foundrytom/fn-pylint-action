@@ -55,7 +55,7 @@ async function run() {
     });
 
     console.log( "ERROR CODE=====")
-    console.log(errorCode)
+    console.log(exitCode)
     console.log("====")
 
     if (exitCode && 32) {

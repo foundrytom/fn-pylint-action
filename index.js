@@ -18,41 +18,47 @@ const exec = require('@actions/exec');
 /**
  * Execute pylint and report issues, if any found.
  */
-async function run() {
+function run() {
     const pylintDisable = core.getInput('pylint-disable') || "";
     const pylintRCFile = core.getInput('pylint-rcfile') || "";
     const pylintPaths = core.getInput('pylint-paths');
     const pylintIgnorePaths = core.getInput('pylint-ignore-paths') || "";
 
     let pylintOutput = "";  // Pylint process output.
-    try {
-        // Run pylint via `exec()`, which throws an exception if the
-        // process exits with a non-zero exit code. Here, we assume a
-        // non-zero exit code (and hence exception) means pylint has
-        // detected issues in the code that we need to report.
-        await exec.exec("pylint", [
-            `--disable=${pylintDisable}`,
-            `--ignore-paths=${pylintIgnorePaths}`,
-            `--rcfile=${pylintRCFile}`,
-            `--output-format=json`,
-            ...pylintPaths.split(" ")
-        ], {
-            listeners: {
-                stdout: (data) => pylintOutput += data.toString()
-            }
-        });
-    } catch (pylintError) {
+
+    // Run pylint via `exec()`, which throws an exception if the
+    // process exits with a non-zero exit code.
+    exec.exec("pylint", [
+        `--disable=${pylintDisable}`,
+        `--ignore-paths=${pylintIgnorePaths}`,
+        `--rcfile=${pylintRCFile}`,
+        `--output-format=json`,
+        ...pylintPaths.split(" ")
+    ], {
+        listeners: {
+            stdout: (data) => pylintOutput += data.toString()
+        }
+    }).catch(pylintError => {
+
+        // The exception thrown by `exec` doesn't include the exit
+        // code as a field, we have to parse the error message.
+
+        // Error 32, is a usage error
+        if(pylintError.message.indexOf("exit code 32") > 0) {
+            console.error(pylintError);
+            core.setFailed()
+            return;
+        }
+
+        // Any other exit code means one or more errors were
+        // found in the source so report these as we like.
         try {
             reportResults(JSON.parse(pylintOutput), pylintDisable);
         } catch (reportingError) {
-            // The exception thrown by `exec` doesn't include the exit
-            // code as a field (we'd have to parse the error message).
-            // So report the pylint process error here as well, in case
-            // that was the root cause for `reportResults` failing.
             console.error(pylintError);
             console.error(reportingError);
         }
-    }
+    });
 }
 
 /**

@@ -10,6 +10,9 @@ inputs:
   pylint-paths:
     description: "Paths to Python files"
     required: true
+  pylint-ignore-paths:
+    description: "Paths to ignore"
+    required: false
 runs:
   using: "node12"
   main: "dist/index.js"

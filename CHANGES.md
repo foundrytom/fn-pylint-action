@@ -4,12 +4,12 @@ Changes
 v1.1.0
 ------
 
-# New features
+### New features
 
 - Added `pylint-ignore-paths` input, passed to `pylint` via the
   `--ignore-paths` command-line argument.
 
-# Bug fixes
+### Bug fixes
 
 - Usage errors thrown by the `pylint` invocation will now fail the
   action.
